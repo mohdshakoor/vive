@@ -49,8 +49,7 @@ export const LoginForm = () => {
       login(values)
       .then((data)=>{
         setError(data?.error);
-        // todo : add when we add 2 fa
-      //  setSuccess(data?.success);
+      setSuccess(data?.success);
       })
     });
   };
