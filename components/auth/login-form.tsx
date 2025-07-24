@@ -30,6 +30,7 @@ export const LoginForm = () => {
  ? " Email already in use with different provider! "
  : "";
 
+  const [showTwoFactor,setShowTwoFactor] = useState(false);
   const [error,setError] = useState<string | undefined>("");
   const [success,setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -49,9 +50,20 @@ export const LoginForm = () => {
     startTransition(() => {
       login(values)
       .then((data)=>{
-        setError(data?.error);
-      setSuccess(data?.success);
-      })
+       if (data?.success){
+        form.reset();
+        setSuccess(data.success);
+       }
+
+       if (data?.success) {
+        form.reset();
+        setSuccess(data.success);
+       }
+
+       if (data?.twoFactor){
+        setShowTwoFactor(true);
+       }
+      }).catch(()=> setError("something went wrong"))
     });
   };
 
@@ -63,8 +75,33 @@ export const LoginForm = () => {
       showSocial
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <form
+         onSubmit={form.handleSubmit(onSubmit)} 
+        className="space-y-6"
+        >
           <div className="space-y-4">
+            {showTwoFactor && (
+            <FormField
+              control={form.control}
+              name="code"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel> Two Factor Code </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled ={isPending}
+                      placeholder="123456"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            )}
+            {!showTwoFactor && (
+              <>
             <FormField
               control={form.control}
               name="email"
@@ -112,6 +149,8 @@ export const LoginForm = () => {
                 </FormItem>
               )}
             />
+            </>
+            )}
           </div>
 
           <FormError message={error || urlError } />
@@ -120,7 +159,7 @@ export const LoginForm = () => {
           disabled ={isPending}
           type="submit" 
           className="w-full">
-            Login
+            {showTwoFactor ? "Confirm" : "Login"}
           </Button>
         </form>
       </Form>
