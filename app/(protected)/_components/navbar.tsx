@@ -32,15 +32,6 @@ export const Navbar = () => {
           </Link>
         </Button>
         
-        <Button
-          asChild
-          variant={pathname === "/settings" ? "default" : "outline"}
-        >
-          <Link href="/settings">
-            Settings
-          </Link>
-        </Button>
-
          <Button
           asChild
           variant={pathname === "/admin" ? "default" : "outline"}
@@ -50,8 +41,16 @@ export const Navbar = () => {
           </Link>
         </Button>
 
+        <Button
+          asChild
+          variant={pathname === "/settings" ? "default" : "outline"}
+        >
+          <Link href="/settings">
+            Settings
+          </Link>
+        </Button>
+
       </div>
-      <p>User Button</p>
       <UserButton/>
     </nav>
   );
